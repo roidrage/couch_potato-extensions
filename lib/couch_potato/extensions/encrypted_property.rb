@@ -29,11 +29,7 @@ module CouchPotato
         value = json[name.to_s].nil? ? json[name.to_sym] : json[name.to_s]
         object.send "#{name}=", decrypt(value)
       end
-      # 
-      # def dirty?(object)
-      #   object.send("#{name}_changed?")
-      # end
-      # 
+
       def serialize(json, object)
         json[name] = encrypt(object.send(name))
       end

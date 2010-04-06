@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'spec'
 require 'couch_potato'
 
 $:.unshift(File.expand_path(File.dirname(__FILE__) + "../lib"))
@@ -12,3 +14,4 @@ recreate_db
 require 'couch_potato/extensions/encryption'
 require 'couch_potato/extensions/encrypted_property'
 require 'couch_potato/extensions/persistence'
+require 'couch_potato/extensions/encrypted_view_spec'
