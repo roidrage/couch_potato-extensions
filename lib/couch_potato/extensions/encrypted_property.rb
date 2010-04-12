@@ -39,7 +39,7 @@ module CouchPotato
       end
       
       def encrypt(value)
-        Base64.encode64(EzCrypto::Key.encrypt_with_password(@options[:password], @options[:salt], value))
+        Base64.encode64(EzCrypto::Key.encrypt_with_password(@options[:password], @options[:salt], value)) if not value.nil?
       end
       
       def decrypt(value)
