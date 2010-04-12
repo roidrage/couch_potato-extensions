@@ -30,6 +30,10 @@ module CouchPotato
         object.send "#{name}=", decrypt(value)
       end
 
+      def dirty?(object)
+        false
+      end
+      
       def serialize(json, object)
         json[name] = encrypt(object.send(name))
       end
