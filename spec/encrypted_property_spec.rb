@@ -3,7 +3,6 @@ require 'spec_helper'
 describe CouchPotato::Extensions::EncryptedProperty do
   class SecureDocument
     include CouchPotato::Persistence
-    include CouchPotato::Extensions::Encryption
     encrypted_property :body, :salt => 'Va7JYeT7t08vMweYU6F6dO', :password => "coffee! more coffee!"
   end
   

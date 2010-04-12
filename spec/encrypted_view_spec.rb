@@ -3,7 +3,6 @@ require 'spec_helper'
 describe CouchPotato::Extensions::EncryptedViewSpec do
   class SecureUser
     include CouchPotato::Persistence
-    include CouchPotato::Extensions::Encryption
     encrypted_property :email, :salt => 'Va7JYeT7t08vMweYU6F6dO', :password => "coffee! more coffee!"
     
     view :by_email, :key => :email, :type => CouchPotato::Extensions::EncryptedViewSpec
