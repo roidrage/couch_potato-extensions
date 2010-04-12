@@ -23,6 +23,20 @@ describe CouchPotato::Extensions::EncryptedProperty do
       document = SecureDocument.new(:body => "very important")
       document.body.should == 'very important'
     end
+    
+    describe "dirty checking" do
+      it "should have a dirty check accessor" do
+        document = SecureDocument.new
+        document.respond_to?(:body_changed?).should == true
+      end
+      
+      it "should mark as changed when assigned a new value" do
+        document = SecureDocument.new
+        document.body_changed?.should == false
+        document.body = "very important"
+        document.body_changed?.should == true
+      end
+    end
   end
   
   describe "saving documents" do
@@ -44,5 +58,12 @@ describe CouchPotato::Extensions::EncryptedProperty do
       loaded_document = CouchPotato.database.load_document(document.id)
       loaded_document.body.should == "very important"
     end
+  end
+  
+  describe "serializing data" do
+    # Owner = Struct.new(:name)
+    # let(:property) {CouchPotato::Extensions::EncryptedProperty}
+    
+    # it "should not encrypt the data when it was changed"
   end
 end

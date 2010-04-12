@@ -2,29 +2,12 @@ require 'bcrypt'
 
 module CouchPotato
   module Extensions
-    class EncryptedProperty
-      attr_reader :type, :name
-      
-      def initialize(owner, name, options = {})
-        @type = owner
-        @name = name
+    class EncryptedProperty < CouchPotato::Persistence::SimpleProperty
+      def initialize(owner_clazz, name, options = {})
+        super
         @options = options
-        
-        define_accessors(name)
       end
       
-      def define_accessors(name)
-        type.class_eval do
-          define_method(name) do
-            instance_variable_get("@#{name}")
-          end
-          
-          define_method("#{name}=") do |value|
-            instance_variable_set("@#{name}", value)
-          end
-        end
-      end
-
       def build(object, json)
         value = json[name.to_s].nil? ? json[name.to_sym] : json[name.to_s]
         object.send "#{name}=", decrypt(value)
