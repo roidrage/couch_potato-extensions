@@ -24,18 +24,9 @@ describe CouchPotato::Extensions::EncryptedProperty do
       document.body.should == 'very important'
     end
     
-    describe "dirty checking" do
-      it "should have a dirty check accessor" do
-        document = SecureDocument.new
-        document.respond_to?(:body_changed?).should == true
-      end
-      
-      it "should mark as changed when assigned a new value" do
-        document = SecureDocument.new
-        document.body_changed?.should == false
-        document.body = "very important"
-        document.body_changed?.should == true
-      end
+    it "should allow access through the attributes hash" do
+      document = SecureDocument.new(:body => "very important")
+      document.attributes[:body].should == "very important"
     end
   end
   
@@ -48,22 +39,31 @@ describe CouchPotato::Extensions::EncryptedProperty do
       body.should_not == 'very important'
       body.should == Base64.encode64(EzCrypto::Key.encrypt_with_password("coffee! more coffee!", "Va7JYeT7t08vMweYU6F6dO", "very important"))
     end
-  end
-  
-  describe "loading documents" do
-    let(:document) { SecureDocument.new(:body => "very important") } 
     
-    it "should decrypt the attributes" do
+    it "should not encrypt an attribute that hasn't changed" do
+      @document = document
       CouchPotato.database.save_document document
-      loaded_document = CouchPotato.database.load_document(document.id)
-      loaded_document.body.should == "very important"
+      @document = CouchPotato.database.load_document(document.id)
+      @document.is_dirty
+      EzCrypto::Key.should_not_receive(:encrypt_with_password)
+      CouchPotato.database.save_document @document
     end
   end
   
-  describe "serializing data" do
-    # Owner = Struct.new(:name)
-    # let(:property) {CouchPotato::Extensions::EncryptedProperty}
+  describe "loading documents" do
+    let(:document) do
+      document = SecureDocument.new(:body => "very important")
+      CouchPotato.database.save_document document
+      CouchPotato.database.load_document(document.id)
+    end
     
-    # it "should not encrypt the data when it was changed"
+    it "should decrypt the attributes" do
+      document.body.should == "very important"
+    end
+    
+    it "should not encrypt the data when it was changed" do
+      document.instance_variable_get(:@encrypted_body).should_not == nil
+    end
   end
+
 end
