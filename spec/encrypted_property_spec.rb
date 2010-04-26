@@ -32,7 +32,7 @@ describe CouchPotato::Extensions::EncryptedProperty do
   
   describe "saving documents" do
     let(:document) { SecureDocument.new(:body => "very important") }
-
+  
     it "should encrypt the property when accessing the document hash" do
       body = document.to_hash[:body]
       body.should_not == nil
@@ -47,6 +47,24 @@ describe CouchPotato::Extensions::EncryptedProperty do
       @document.is_dirty
       EzCrypto::Key.should_not_receive(:encrypt_with_password)
       CouchPotato.database.save_document @document
+    end
+    
+    describe "with nil'd properties" do
+      before do
+        @document = SecureDocument.new(:body => nil)
+      end
+      
+      it "should not fail when saving" do
+        lambda do
+          CouchPotato.database.save_document @document
+        end.should_not raise_error
+      end
+      
+      it "should return nil when loading" do
+        CouchPotato.database.save_document @document
+        @document = CouchPotato.database.load_document(@document.id)
+        @document.body.should == nil
+      end
     end
   end
   

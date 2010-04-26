@@ -31,11 +31,15 @@ module CouchPotato
       end
       
       def encrypt(value)
-        Base64.encode64(EzCrypto::Key.encrypt_with_password(@options[:password], @options[:salt], value))
+        if not value.nil?
+          value.empty? ? value : Base64.encode64(EzCrypto::Key.encrypt_with_password(@options[:password], @options[:salt], value))
+        end
       end
       
       def decrypt(value)
-        EzCrypto::Key.decrypt_with_password(@options[:password], @options[:salt], Base64.decode64(value))
+        if not value.nil?
+          EzCrypto::Key.decrypt_with_password(@options[:password], @options[:salt], Base64.decode64(value))
+        end
       end
       
       def encrypted_value(object)
