@@ -5,6 +5,6 @@ require File.expand_path(File.dirname(__FILE__) + "/extensions/encrypted_view_sp
 
 module CouchPotato
   module Extensions
-    VERSION = '0.0.5'
+    VERSION = '0.0.6'
   end
 end

@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name    = 'couch_potato-extensions'
-  gem.version = '0.0.5'
+  gem.version = '0.0.6'
   gem.date    = Date.today.to_s
 
   gem.add_dependency 'couch_potato'
